@@ -4,36 +4,29 @@ import Table from "./Table";
 import Form from "./Form";
 
 function MyApp() {
+    // initialize with an empty array (or sample data)
     const [characters, setCharacters] = useState([
-        {
-            name: "Charlie",
-            job: "Janitor"
-        },
-        {
-            name: "Mac",
-            job: "Bouncer"
-        },
-        {
-            name: "Dee",
-            job: "Aspiring actress"
-        },
-        {
-            name: "Dennis",
-            job: "Bartender"
-        }
+        { name: "Charlie", job: "Janitor" },
+        { name: "Mac", job: "Bouncer" },
+        { name: "Dee", job: "Aspiring actress" },
+        { name: "Dennis", job: "Bartender" }
     ]);
-    // remove handler must live inside the component so it can access state
+
     const removeOneCharacter = (index) => {
-        const updated = (characters || []).filter((_, i) => i !== index);
-        setCharacters(updated);
+        setCharacters(prev => prev.filter((_, i) => i !== index));
     };
+
+    function updateList(person) {
+        setCharacters(prev => [...prev, person]);
+    };
+
     return (
         <div className="container">
             <Table
             characterData={characters}
             removeCharacter={removeOneCharacter}
             />
-            <Form />
+            <Form handleSubmit={updateList} />
         </div>
         );
 }

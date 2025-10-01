@@ -13,7 +13,8 @@ function TableHeader() {
 }
 
 function TableBody(props) {
-  const rows = props.characterData.map((row, index) => {
+  const data = props.characterData || [];
+  const rows = data.map((row, index) => {
     return (
         <tr key={index}>
             <td>{row.name}</td>
