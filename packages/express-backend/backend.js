@@ -44,9 +44,24 @@ const findUserByName = (name) => {
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 
+const generateId = () => {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let id = '';
+  for (let i = 0; i < 6; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+};
+
 const addUser = (user) => {
-  users["users_list"].push(user);
-  return user;
+  const id = generateId();
+  const userWithId = {
+    id,
+    name: (user && user.name) ? String(user.name) : "",
+    job: (user && user.job) ? String(user.job) : ""
+  };
+  users["users_list"].push(userWithId);
+  return userWithId;
 };
 
 app.use(cors());
@@ -58,8 +73,12 @@ app.get("/", (req, res) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
+  if (!userToAdd || !userToAdd.name || !userToAdd.job) {
+    return res.status(400).json({ error: "Request must include name and job fields" });
+  }
+
+  const created = addUser(userToAdd);
+  res.status(201).json(created);
 });
 
 app.get("/users", (req, res) => {
@@ -86,9 +105,13 @@ app.get("/users/:id", (req, res) => {
 app.delete('/users/:id', (req, res) => {
   const id = req.params.id;
   const index = users.users_list.findIndex(u => u.id === id);
-  if (index < 0) return res.status(404).send('Resource not found.');
-  const [deleted] = users.users_list.splice(index, 1);
-  return res.status(200).json(deleted);
+  if (index < 0) {
+    // Resource not found
+    return res.sendStatus(404);
+  }
+  // Remove the user and return 204 No Content on success
+  users.users_list.splice(index, 1);
+  return res.sendStatus(204);
 });
 
 app.listen(port, () => {
