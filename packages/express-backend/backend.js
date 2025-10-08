@@ -63,7 +63,7 @@ app.post("/users", (req, res) => {
 app.get("/users", (req, res) => {
   const name = req.query.name;
   if (name != undefined) {
-    let result = findUserByName(name);
+  let result = [].concat(findUserByName(name));
     result = { users_list: result };
     res.send(result);
   } else {
@@ -79,6 +79,14 @@ app.get("/users/:id", (req, res) => {
   } else {
     res.send(result);
   }
+});
+
+app.delete('/users/:id', (req, res) => {
+  const id = req.params.id;
+  const index = users.users_list.findIndex(u => u.id === id);
+  if (index < 0) return res.status(404).send('Resource not found.');
+  const [deleted] = users.users_list.splice(index, 1);
+  return res.status(200).json(deleted);
 });
 
 app.listen(port, () => {
