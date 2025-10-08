@@ -9,8 +9,9 @@
     "express": "^4.21.2"
   },
   "scripts": {
-    "start": "node backend.js",
-    "test": "npm run test"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx nodemon backend.js",
+    "start": "node backend.js"
   },
   "repository": {
     "type": "git",

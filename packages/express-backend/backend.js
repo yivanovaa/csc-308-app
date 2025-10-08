@@ -24,7 +24,7 @@ const users = {
     {
       id: "yat999",
       name: "Dee",
-      job: "Aspring actress"
+      job: "Aspiring actress"
     },
     {
       id: "zap555",
@@ -34,6 +34,12 @@ const users = {
   ]
 };
 
+const findUserByName = (name) => {
+  return users["users_list"].filter(
+    (user) => user["name"] === name
+  );
+};
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -41,7 +47,12 @@ app.get("/", (req, res) => {
 });
 
 app.get("/users", (req, res) => {
-  res.send(users);
+  const { name } = req.query;
+  if (name) {
+    const matched = findUserByName(name);
+    return res.json({ users_list: matched });
+  }
+  return res.json(users);
 });
 
 app.listen(port, () => {
