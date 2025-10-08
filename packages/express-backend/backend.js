@@ -24,7 +24,7 @@ const users = {
     {
       id: "yat999",
       name: "Dee",
-      job: "Aspiring actress"
+      job: "Aspring actress"
     },
     {
       id: "zap555",
@@ -40,6 +40,9 @@ const findUserByName = (name) => {
   );
 };
 
+const findUserById = (id) =>
+  users["users_list"].find((user) => user["id"] === id);
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -47,12 +50,24 @@ app.get("/", (req, res) => {
 });
 
 app.get("/users", (req, res) => {
-  const { name } = req.query;
-  if (name) {
-    const matched = findUserByName(name);
-    return res.json({ users_list: matched });
+  const name = req.query.name;
+  if (name != undefined) {
+    let result = findUserByName(name);
+    result = { users_list: result };
+    res.send(result);
+  } else {
+    res.send(users);
   }
-  return res.json(users);
+});
+
+app.get("/users/:id", (req, res) => {
+  const id = req.params["id"]; 
+  let result = findUserById(id);
+  if (result === undefined) {
+    res.status(404).send("Resource not found.");
+  } else {
+    res.send(result);
+  }
 });
 
 app.listen(port, () => {
