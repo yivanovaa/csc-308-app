@@ -1,24 +1,31 @@
 // src/MyApp.jsx
-import React, { useState } from "react";
+import React, {useState, useEffect} from "react";
 import Table from "./Table";
 import Form from "./Form";
 
 function MyApp() {
-    // initialize with an empty array (or sample data)
-    const [characters, setCharacters] = useState([
-        { name: "Charlie", job: "Janitor" },
-        { name: "Mac", job: "Bouncer" },
-        { name: "Dee", job: "Aspiring actress" },
-        { name: "Dennis", job: "Bartender" }
-    ]);
+    const [characters, setCharacters] = useState();
 
     const removeOneCharacter = (index) => {
-        setCharacters(prev => prev.filter((_, i) => i !== index));
+        const updated = characters.filter((_, i) => i !== index);
+        setCharacters(updated);
     };
 
     function updateList(person) {
-        setCharacters(prev => [...prev, person]);
+        setCharacters([...characters, person]);
     };
+
+    function fetchUsers() {
+        const promise = fetch("http://localhost:8000/users");
+        return promise;
+    }
+
+    useEffect(() => {
+        fetchUsers()
+            .then((res) => res.json())
+            .then((json) => setCharacters(json["users_list"]))
+            .catch((error) => { console.log(error); });
+        }, [] );
 
     return (
         <div className="container">
