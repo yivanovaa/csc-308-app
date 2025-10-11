@@ -1,0 +1,22 @@
+{
+  "name": "testing",
+  "version": "1.0.0",
+  "description": "Practice for testing with Jest",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yivanovaa/csc-308-app.git"
+  },
+  "keywords": [
+    "Jest"
+  ],
+  "author": "Yanitsa Ivanova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yivanovaa/csc-308-app/issues"
+  },
+  "homepage": "https://github.com/yivanovaa/csc-308-app#readme"
+}
