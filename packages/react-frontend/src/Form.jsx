@@ -12,47 +12,45 @@ function Form(props) {
         job: ""
     });
 
-    async function submitForm() {
+    async function submitForm(e) {
+        e.preventDefault(); // Prevent default form submission
         try {
-            const res = await fetch('http://localhost:8000/users', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(person)
-            });
-            if (res.status === 201) {
-                const created = await res.json();
-                props.handleSubmit(created);
-                setPerson({ name: "", job: "" });
-            } else {
-                console.warn('Expected 201, got', res.status);
-            }
-        } catch (err) {
-            console.error('Submit failed', err);
+            await props.handleSubmit(person);
+            // Clear the form after successful submission
+            setPerson({ name: "", job: "" });
+        } catch (error) {
+            // Error is already handled in the parent component
+            console.error('Form submission error:', error);
         }
     };
 
     return (
-        <form>
-            <label htmlFor="name">Name</label>
-            <input
-            type="text"
-            name="name"
-            id="name"
-            value={person.name}
-            onChange={handleChange}
-            />
-            <label htmlFor="job">Job</label>
-            <input
-            type="text"
-            name="job"
-            id="job"
-            value={person.job}
-            onChange={handleChange}
-            />
-            <input type="button" value="Submit" onClick={submitForm} />
+        <form onSubmit={submitForm}>
+            <div>
+                <label htmlFor="name">Name</label>
+                <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    value={person.name}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <div>
+                <label htmlFor="job">Job</label>
+                <input
+                    type="text"
+                    name="job"
+                    id="job"
+                    value={person.job}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <button type="submit">Submit</button>
         </form>
-        );
+    );
 }
-
 
 export default Form;

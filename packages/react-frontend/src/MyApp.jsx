@@ -6,6 +6,7 @@ import Form from "./Form";
 function MyApp() {
     const [characters, setCharacters] = useState([]);
 
+    // Delete user on backend by id, then update frontend state on success
     async function deleteUser(userId) {
         try {
             const response = await fetch(`http://localhost:8000/users/${userId}`, {
@@ -13,6 +14,7 @@ function MyApp() {
             });
             
             if (response.status === 200 || response.status === 204) {
+                // Remove the user from the local state
                 
                 setCharacters(prev => prev.filter(user => user._id !== userId));
                 return true;
