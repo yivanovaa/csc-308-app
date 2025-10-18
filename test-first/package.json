@@ -1,0 +1,19 @@
+{
+  "name": "tdd",
+  "version": "1.0.0",
+  "description": "Applying TDD (Individual Assignment)",
+  "main": "stock.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yivanovaa/csc-308-app.git#main"
+  },
+  "author": "Yanitsa Ivanova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yivanovaa/csc-308-app/issues"
+  },
+  "homepage": "https://github.com/yivanovaa/csc-308-app/tree/main#readme"
+}

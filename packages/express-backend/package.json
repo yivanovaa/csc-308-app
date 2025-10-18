@@ -1,0 +1,27 @@
+{
+  "name": "backend.js",
+  "version": "1.0.0",
+  "description": "initial backend",
+  "type": "module",
+  "main": "backend.js",
+  "entry point": "backend.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx nodemon backend.js",
+    "start": "node backend.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yivanovaa/csc-308-app.git"
+  },
+  "author": "Yanitsa Ivanova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yivanovaa/csc-308-app/issues"
+  },
+  "homepage": "https://github.com/yivanovaa/csc-308-app#readme"
+}

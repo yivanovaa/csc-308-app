@@ -4,9 +4,7 @@ import React, { useState } from "react";
 function Form(props) {
     function handleChange(event) {
         const { name, value } = event.target;
-        if (name === "job")
-            setPerson({ name: person["name"], job: value });
-        else setPerson({ name: value, job: person["job"] });
+        setPerson(prev => ({ ...prev, [name]: value }));
         }
 
     const [person, setPerson] = useState({
@@ -14,9 +12,23 @@ function Form(props) {
         job: ""
     });
 
-    function submitForm() {
-        props.handleSubmit(person);
-        setPerson({ name: "", job: "" });
+    async function submitForm() {
+        try {
+            const res = await fetch('http://localhost:8000/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(person)
+            });
+            if (res.status === 201) {
+                const created = await res.json();
+                props.handleSubmit(created);
+                setPerson({ name: "", job: "" });
+            } else {
+                console.warn('Expected 201, got', res.status);
+            }
+        } catch (err) {
+            console.error('Submit failed', err);
+        }
     };
 
     return (
