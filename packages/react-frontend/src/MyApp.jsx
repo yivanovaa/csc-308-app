@@ -6,52 +6,65 @@ import Form from "./Form";
 function MyApp() {
     const [characters, setCharacters] = useState([]);
 
-    // Delete user on backend by id, then update frontend state on success
-    async function deleteUser(id) {
+    async function deleteUser(userId) {
         try {
-            const res = await fetch(`http://localhost:8000/users/${id}`, { method: 'DELETE' });
-            if (res.status === 204) {
-                setCharacters(prev => prev.filter(u => u.id !== id));
-            } else if (res.status === 404) {
-                console.warn('Delete failed: resource not found', id);
+            const response = await fetch(`http://localhost:8000/users/${userId}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.status === 200 || response.status === 204) {
+                
+                setCharacters(prev => prev.filter(user => user._id !== userId));
+                return true;
+            } else if (response.status === 404) {
+                const error = await response.json();
+                throw new Error(error.error || 'User not found');
             } else {
-                console.warn('Unexpected response from DELETE', res.status);
+                throw new Error('Failed to delete user');
             }
-        } catch (err) {
-            console.error('Failed to delete user', err);
+        } catch (error) {
+            console.error('Delete error:', error);
+            alert(error.message);
+            return false;
         }
     }
 
-    const removeOneCharacter = (index) => {
+    const removeOneCharacter = async (index) => {
         const user = characters[index];
         if (!user) return;
-        deleteUser(user.id);
+        
+        if (window.confirm(`Are you sure you want to delete ${user.name}?`)) {
+            await deleteUser(user._id);
+        }
     };
 
-    function updateList(person) {
-        postUser(person)
-        .then((res) => {
-            if (res.status === 201) return res.json();
-            throw new Error('Failed to create user: ' + res.status);
-        })
-        .then((created) => setCharacters(prev => [...prev, created]))
-        .catch((error) => { console.log(error); });
+    async function updateList(person) {
+        try {
+            const response = await postUser(person);
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Failed to add user');
+            }
+            const newUser = await response.json();
+            setCharacters(prev => [...prev, newUser]);
+        } catch (error) {
+            console.error('Error adding user:', error);
+            alert(error.message);
+        }
     };
+
+    async function postUser(person) {
+        return fetch("http://localhost:8000/users", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(person),
+        });
+    }
 
     function fetchUsers() {
         const promise = fetch("http://localhost:8000/users");
-        return promise;
-    }
-
-    function postUser(person) {
-        const promise = fetch("http://localhost:8000/users", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(person),
-        });
-
         return promise;
     }
 
